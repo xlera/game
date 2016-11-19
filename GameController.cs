@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -34,6 +34,7 @@ public class GameController : MonoBehaviour
 		GetButtons ();
 		AddListeners ();
 		AddGamePuzzles ();
+		gameGuesses = gamePuzzles.Count / 2;
 	}
 	
 	void GetButtons ()
@@ -43,7 +44,7 @@ public class GameController : MonoBehaviour
 		for(int i = 0; i < objects.Length; i++) 
 		{
 			btns.Add (objects[i].GetComponent<Button> ());
-			btns[i].image.sprite = bgImage;
+			btns[8].image.sprite = bgImage;
 		}
 	}
 
@@ -78,7 +79,8 @@ public class GameController : MonoBehaviour
 	{
 		
 	
-		if (!firstGuess) {
+		if (!firstGuess) 
+		{
 
 			firstGuess = true;
 
@@ -88,7 +90,9 @@ public class GameController : MonoBehaviour
 
 			btns [firstGuessIndex].image.sprite = gamePuzzles [firstGuessIndex];
 
-		} else if (!secondGuess) {
+		} else if (!secondGuess) 
+		
+		{
 			secondGuess = true;
 
 			secondGuessIndex = int.Parse (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name);
@@ -97,14 +101,61 @@ public class GameController : MonoBehaviour
 
 			btns [secondGuessIndex].image.sprite = gamePuzzles [secondGuessIndex];
 
-			if (firstGuessPuzzle == secondGuessPuzzle) {
+			countGuesses++;
+
+			if (firstGuessPuzzle == secondGuessPuzzle) 
+				
+			{
 				Debug.Log ("The Puzzles Match");
-			} else {
+			} else 
+			
+			{
 				Debug.Log ("The Puzzles does not Match");
 			}
 	
 		}
-	}
-}
+
+		IEnumerator CheckIfThePuzzlesMatch() 
+		{
+			yield return new WaitForSeconds(1f);
+
+			if (firstGuessPuzzle == secondGuessPuzzle) 
+			{
+				yield return new WaitForSeconds(.5f);
+
+				btns[firstGuessIndex].interactable = false;
+				btns[secondGuessIndex].interactable = false;
+
+				btns[firstGuessIndex].image.color = new Color(0,0,0);
+				btns[secondGuessIndex].image.color = new Color(0,0,0);
+
+				CheckIfTheGameIsFinished();
+			
+			}	
+			else
+			{
+				yield return new WaitForSeconds(.5f);
+
+
+				btns[firstGuessIndex].image.sprite = bgImage;
+				btns[secondGuessIndex].image.sprite = bgImage;
+			}
+
+			yield return new WaitForSeconds(.5f);
+
+			firstGuess = secondGuess = false;
+
+		}
+		void CheckIfTheGameIsFinished()
+		{
+			countCorrectGuesses++;
+
+			if(countCorrectGuesses == gameGuesses) 
+			{
+				Debug.Log("Game Finished");
+				Debug.Log("It Took You" + countGuesses + "many guess(es) to finish the game");
+			}
+		}
+}//game controller
 
 
