@@ -79,8 +79,7 @@ public class GameController : MonoBehaviour
 	{
 		
 	
-		if (!firstGuess) 
-		{
+		if (!firstGuess) {
 
 			firstGuess = true;
 
@@ -90,9 +89,9 @@ public class GameController : MonoBehaviour
 
 			btns [firstGuessIndex].image.sprite = gamePuzzles [firstGuessIndex];
 
-		} else if (!secondGuess) 
-		
-		{
+			StartCoroutine (CheckIfThePuzzlesMatch ());
+
+		} else if (!secondGuess) {
 			secondGuess = true;
 
 			secondGuessIndex = int.Parse (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name);
@@ -101,21 +100,10 @@ public class GameController : MonoBehaviour
 
 			btns [secondGuessIndex].image.sprite = gamePuzzles [secondGuessIndex];
 
-			countGuesses++;
-
-			if (firstGuessPuzzle == secondGuessPuzzle) 
-				
-			{
-				Debug.Log ("The Puzzles Match");
-			} else 
-			
-			{
-				Debug.Log ("The Puzzles does not Match");
-			}
-	
 		}
+	}
 
-		IEnumerator CheckIfThePuzzlesMatch() 
+		IEnumerator CheckIfThePuzzlesMatch ()
 		{
 			yield return new WaitForSeconds(1f);
 
@@ -126,8 +114,8 @@ public class GameController : MonoBehaviour
 				btns[firstGuessIndex].interactable = false;
 				btns[secondGuessIndex].interactable = false;
 
-				btns[firstGuessIndex].image.color = new Color(0,0,0);
-				btns[secondGuessIndex].image.color = new Color(0,0,0);
+				btns[firstGuessIndex].image.color = new Color(0,0,0,0);
+				btns[secondGuessIndex].image.color = new Color(0,0,0,0);
 
 				CheckIfTheGameIsFinished();
 			
@@ -146,7 +134,9 @@ public class GameController : MonoBehaviour
 			firstGuess = secondGuess = false;
 
 		}
+
 		void CheckIfTheGameIsFinished()
+
 		{
 			countCorrectGuesses++;
 
